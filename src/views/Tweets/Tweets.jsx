@@ -1,9 +1,29 @@
 // // gets all tweets and displays them for that user.
 // // form, submit button, logout button, delete button for each tweet
-import React from 'react';
+
+import { useState, useEffect } from 'react';
+import request from 'superagent';
+import { useUser } from '../../context/UserContext.js';
 
 export default function Tweets() {
-  return <div>Tweets</div>;
+  const [tweets, setTweets] = useState();
+  const { user } = useUser();
+  async function getAllTweets() {
+    //get tweets from db.
+    const res = await request
+      .get('http://localhost:7890/api/v1/posts')
+      .withCredentials();
+    console.log(res.body);
+    setTweets(res.body);
+    //need state that holds the tweets
+    //display on page
+  }
+
+  useEffect(() => {
+    getAllTweets();
+  }, []);
+
+  return <div>Tweets View Page</div>;
 }
 
 // import { useEffect } from 'react';
