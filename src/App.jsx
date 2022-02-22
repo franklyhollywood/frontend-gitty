@@ -7,8 +7,9 @@ import {
 import Header from './components/header';
 import PrivateRoute from './components/PrivateRoute.jsx';
 import { UserProvider } from './context/UserContext.js';
+import Home from './views/Home/Home.jsx';
 import Tweets from './views/Tweets/Tweets.jsx';
-import User from './views/User/User.jsx';
+import OauthReturn from './views/OauthReturn/OauthReturn.jsx';
 
 function App() {
   return (
@@ -17,12 +18,14 @@ function App() {
         <Router>
           <Header />
           <Switch>
-            <Route exact path="/"></Route>
+            <Route exact path="/">
+              <Home />
+            </Route>
             <PrivateRoute exact path="/tweets">
               <Tweets />
             </PrivateRoute>
-            <Route path="/user">
-              <User />
+            <Route path="/oauthreturn">
+              <OauthReturn />
             </Route>
           </Switch>
         </Router>

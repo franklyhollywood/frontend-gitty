@@ -1,38 +1,43 @@
-//Login button if not logged in / logout button if logged in
-// create logged in and logged out buttons
+import { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
-import request from 'superagent';
 import { useUser } from '../context/UserContext.js';
-// import { useState, useEffect } from 'react';
+import { logIn, logOut } from '../services/users.js';
 
 export default function Header() {
-  const { user, setUser } = useUser();
+  const { getUser } = useUser();
   let history = useHistory();
 
-  async function handleLogin() {
-    console.log('SOMETHING');
-    window.location.assign(`${process.env.URL}/api/v1/users/login`);
-    const res = await request
-      .get('http://localhost:7890/api/v1/users/user')
-      .withCredentials();
-    setUser(res.body);
-  }
+  const [user, setUser] = useState({});
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    (async () => {
+      getUser.then((user) => {
+        setUser(user);
+      });
+    })();
+  }, []);
+
+  useEffect(() => {
+    setIsLoading(user?.id !== undefined);
+  }, [user]);
 
   async function handleLogOut() {
-    const res = await request
-      .delete(`${process.env.URL}/api/v1/users/sessions`)
-      .withCredentials();
-    setUser({});
+    await logOut();
     history.push('/');
   }
 
-  return (
-    <>
-      {user.id ? (
-        <button onClick={handleLogOut}>log out</button>
-      ) : (
-        <button onClick={handleLogin}>Log in with Github</button>
-      )}
-    </>
-  );
+  if (isLoading) {
+    return <h1>Loading...</h1>;
+  } else {
+    return (
+      <>
+        {user.id ? (
+          <button onClick={handleLogOut}>log out</button>
+        ) : (
+          <button onClick={logIn}>Log in with Github</button>
+        )}
+      </>
+    );
+  }
 }

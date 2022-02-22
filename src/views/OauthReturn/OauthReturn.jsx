@@ -1,16 +1,17 @@
 import { useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useUser } from '../../context/UserContext.js';
-import { getUser } from '../../services/users.js';
+import { fetchUser } from '../../services/users.js';
 
-export default function User() {
+//Once Oauth completes the user will be redirected to this page:
+export default function OauthReturn() {
   let history = useHistory();
   const { setUser } = useUser();
   useEffect(() => {
     const user = async () => {
-      const user = await getUser();
+      const user = await fetchUser();
       setUser(user);
-      history.push('/');
+      history.push('/tweets');
     };
     user();
   }, []);
