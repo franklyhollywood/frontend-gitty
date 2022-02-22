@@ -8,12 +8,11 @@ export default function OauthReturn() {
   let history = useHistory();
   const { setUser } = useUser();
   useEffect(() => {
-    const user = async () => {
+    (async () => {
       const user = await fetchUser();
       setUser(user);
       history.push('/tweets');
-    };
-    user();
+    })()
   }, []);
 
   return <div>User</div>;
