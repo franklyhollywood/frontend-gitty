@@ -14,22 +14,22 @@ import OauthReturn from './views/OauthReturn/OauthReturn.jsx';
 function App() {
   return (
     <div className="App">
-      <UserProvider>
-        <Router>
-          <Header />
-          <Switch>
-            <Route exact path="/">
-              <Home />
-            </Route>
-            <PrivateRoute exact path="/tweets">
-              <Tweets />
-            </PrivateRoute>
-            <Route path="/oauthreturn">
-              <OauthReturn />
-            </Route>
-          </Switch>
-        </Router>
-      </UserProvider>
+      <Router>
+        <UserProvider>
+        <Header />
+        <Switch>
+          <Route exact path="/">
+            <Home />
+          </Route>
+          <PrivateRoute exact path="/tweets">
+            <Tweets />
+          </PrivateRoute>
+          <Route path="/oauthreturn">
+            <OauthReturn />
+          </Route>
+        </Switch>
+        </UserProvider>
+      </Router>
     </div>
   );
 }

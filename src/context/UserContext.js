@@ -1,28 +1,43 @@
-import { createContext, useContext, useEffect, useState } from 'react';
+import { createContext, useContext, useEffect, useMemo, useState } from 'react';
 import { fetchUser } from '../services/users';
+const request = require('superagent');
 
 const UserContext = createContext();
 
 const UserProvider = ({ children }) => {
-  const currentUser = fetchUser();
-  const [userPromise, setUserPromise] = useState(
-    new Promise((resolve, reject) => {
-      fetchUser()
-        .then((user) => {
-          resolve(user);
-        })
-        .catch((e) => reject(e));
-    })
-  );
-  const [user, setUser] = useState(
-    currentUser ? { id: currentUser.id, email: currentUser.email } : {}
-  );
+  const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState({});
 
-  async function getUser() {
-    return await userPromise;
+  useEffect(() => {
+    (async () => {
+      const fetchedUser = await fetchUser();
+      console.log(fetchedUser);
+      if(!!fetchedUser?.id) {
+        setUser(fetchedUser);
+      }
+      setLoading(false);
+    })();
+  }, []);
+
+  async function login() {
+    window.location.assign(`${process.env.URL}/api/v1/github/login`);
   }
-  const value = { getUser: userPromise, setUser };
-  return <UserContext.Provider value={value}>{children}</UserContext.Provider>;
+  
+  async function logout() {
+    const res = await request
+      .delete(`${process.env.URL}/api/v1/github/sessions`)
+      .withCredentials();
+    setUser({});
+    history.push('/');
+  }
+
+  const value = useMemo(() => ({user, setUser, login, logout}), [user]);
+
+  if(loading) {
+    return <UserContext.Provider value={value}>Loading...</UserContext.Provider>;
+  } else {
+    return <UserContext.Provider value={value}>{children}</UserContext.Provider>;
+  }
 };
 
 const useUser = () => {

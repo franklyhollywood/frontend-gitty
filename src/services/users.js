@@ -1,6 +1,6 @@
 async function fetchUser() {
   try {
-    const res = await fetch('http://localhost:7890/api/v1/users/me/', {
+    const res = await fetch('http://localhost:7890/api/v1/github/me/', {
       credentials: 'include',
     });
     if (res.statusCode >= 400) {
@@ -13,15 +13,4 @@ async function fetchUser() {
   }
 }
 
-async function logIn() {
-  window.location.assign(`${process.env.URL}/api/v1/users/login`);
-}
-
-async function logOut() {
-  const res = await request
-    .delete(`${process.env.URL}/api/v1/users/sessions`)
-    .withCredentials();
-  setUser({});
-}
-
-export { fetchUser, logIn, logOut };
+export { fetchUser};
